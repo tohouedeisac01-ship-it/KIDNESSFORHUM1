@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Horizon Solidaire</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+/* Layout: hero text on the left, sticky donation card on the right; stacks on phones. Sections below alternate narrow text and wide figures. */
+:root {
+  --bg: #f4f7f5;
+  --surface: #ffffff;
+  --ink: #12302f;
+  --muted: #4d6764;
+  --line: #d3dfdb;
+  --primary: #14625f;
+  --primary-ink: #ffffff;
+  --sun: #f0b429;
+  --sun-ink: #3a2a00;
+  --soft: #e3efeb;
+  --ok: #1f7a4d;
+  --font-display: "Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1f1e; --surface: #142a29; --ink: #e8f2ef; --muted: #9db8b3; --line: #29423f;
+    --primary: #4cc2b8; --primary-ink: #06201e; --sun: #f5c04a; --sun-ink: #2b1f00; --soft: #1b3533; --ok: #55c58c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1f1e; --surface: #142a29; --ink: #e8f2ef; --muted: #9db8b3; --line: #29423f;
+  --primary: #4cc2b8; --primary-ink: #06201e; --sun: #f5c04a; --sun-ink: #2b1f00; --soft: #1b3533; --ok: #55c58c;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+p { margin: 0; }
+a { color: var(--primary); }
+:focus-visible { outline: 3px solid var(--sun); outline-offset: 2px; border-radius: 6px; }
+.wrap { max-width: 1120px; margin: 0 auto; }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 20px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 10px; }
+.mark { width: 28px; height: 28px; flex: none; }
+.top a.skip { font-size: 15px; font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--sun); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 48px; align-items: start; padding-block: 24px 64px; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; }
+h1 { font-size: clamp(38px, 6vw, 68px); font-weight: 800; }
+h1 em { font-style: normal; background: linear-gradient(transparent 62%, var(--sun) 62% 92%, transparent 92%); }
+.lead { font-size: 19px; color: var(--muted); max-width: 52ch; margin-top: 22px; }
+.facts { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--line); }
+.fact b { display: block; font-family: var(--font-display); font-size: 28px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.fact span { font-size: 14px; color: var(--muted); }
+
+/* donation card */
+.give { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; box-shadow: 0 18px 40px -24px rgba(8, 40, 38, 0.35); position: sticky; top: 16px; min-width: 0; }
+.give h2 { font-size: 24px; margin-bottom: 16px; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; background: var(--soft); border-radius: 12px; padding: 4px; gap: 4px; }
+.seg button { font: inherit; font-weight: 600; font-size: 15px; border: 0; background: transparent; color: var(--ink); padding: 10px 8px; border-radius: 9px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--surface); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18); }
+.amounts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+.amounts button { font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 22px; padding: 14px 6px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 12px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.amounts button:hover { border-color: var(--primary); }
+.amounts button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary); color: var(--primary-ink); }
+.custom { display: flex; align-items: center; gap: 8px; margin-top: 10px; border: 2px solid var(--line); border-radius: 12px; padding: 0 14px; background: var(--surface); }
+.custom:focus-within { border-color: var(--primary); }
+.custom label { font-size: 14px; color: var(--muted); white-space: nowrap; }
+.custom input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--ink); font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 22px; padding: 11px 0; text-align: right; outline: none; font-variant-numeric: tabular-nums; }
+.custom .cur { font-family: var(--font-display); font-weight: 700; font-size: 22px; }
+.impact { margin-top: 14px; padding: 12px 14px; background: var(--soft); border-radius: 12px; font-size: 15px; min-height: 3.6em; }
+.impact b { font-variant-numeric: tabular-nums; }
+.tabs { display: flex; gap: 6px; margin-top: 20px; border-bottom: 1px solid var(--line); }
+.tabs button { font: inherit; font-weight: 600; font-size: 15px; background: transparent; border: 0; border-bottom: 3px solid transparent; color: var(--muted); padding: 10px 12px; cursor: pointer; margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--sun); }
+.panel { padding-top: 16px; }
+.cta { display: block; width: 100%; text-align: center; text-decoration: none; font: inherit; font-weight: 700; font-size: 18px; background: var(--primary); color: var(--primary-ink); border: 0; padding: 16px; border-radius: 12px; cursor: pointer; }
+.cta:hover { filter: brightness(1.08); }
+.cta.paypal { background: var(--sun); color: var(--sun-ink); }
+.small { font-size: 14px; color: var(--muted); margin-top: 12px; }
+.notice { font-size: 14px; background: var(--soft); border-left: 4px solid var(--sun); padding: 10px 12px; border-radius: 6px; margin-top: 12px; }
+.bank { display: grid; gap: 10px; margin: 0; }
+.bank div { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.bank dt { grid-column: 1 / -1; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.bank dd { margin: 0; font-family: var(--font-mono); font-size: 15px; overflow-wrap: anywhere; min-width: 0; }
+.bank button { font: inherit; font-size: 13px; font-weight: 600; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.bank button.done { background: var(--ok); color: #fff; border-color: var(--ok); }
+
+/* sections */
+section.block { padding-block: 64px; border-top: 1px solid var(--line); }
+.block h2 { font-size: clamp(30px, 4.4vw, 44px); font-weight: 800; max-width: 20ch; }
+.block .intro { color: var(--muted); max-width: 58ch; margin-top: 16px; }
+.ladder { list-style: none; padding: 0; margin: 36px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.ladder li { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ladder .amt { font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.ladder .fcfa { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: -4px; }
+.ladder p { font-size: 16px; }
+
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.bar { display: flex; height: 44px; border-radius: 10px; overflow: hidden; margin-top: 28px; border: 1px solid var(--line); }
+.bar span { display: block; height: 100%; }
+.bar .a { background: var(--primary); }
+.bar .b { background: var(--sun); }
+.bar .c { background: var(--muted); }
+.legend { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
+.legend li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: center; }
+.legend i { width: 14px; height: 14px; border-radius: 4px; display: block; }
+.legend b { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+.ex { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border: 1px dashed var(--line); border-radius: 999px; padding: 2px 8px; vertical-align: middle; margin-left: 6px; white-space: nowrap; }
+.faq details { border-bottom: 1px solid var(--line); padding: 14px 0; }
+.faq summary { cursor: pointer; font-weight: 600; font-size: 18px; list-style-position: outside; }
+.faq details p { color: var(--muted); margin-top: 10px; max-width: 60ch; }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px 48px; font-size: 14px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); gap: 32px; padding-bottom: 40px; }
+  .give { position: static; }
+  .ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .split { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  section.block { padding-block: 48px; }
+}
+@media (max-width: 460px) {
+  body { font-size: 16px; }
+  .give { padding: 18px; }
+  .ladder { grid-template-columns: minmax(0, 1fr); }
+  .tabs button { padding-inline: 8px; font-size: 14px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .amounts button, .cta, .seg button { transition: background-color .15s, border-color .15s, filter .15s; }
+}
+</style>
+<style>body{margin:0}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="14" fill="var(--primary)"/><path d="M4 18h20" stroke="var(--sun)" stroke-width="2.5" stroke-linecap="round"/><path d="M8 18a6 6 0 0 1 12 0" fill="var(--sun)"/></svg>
+      Horizon Solidaire
+    </div>
+    <a class="skip" href="#don">Faire un don</a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <p class="eyebrow">Association · Bénin</p>
+        <h1>Chaque enfant mérite une <em>rentrée</em> qui commence bien.</h1>
+        <p class="lead">Nous finançons les fournitures, les cantines et le soutien scolaire de familles qui n’y arrivent plus seules. Un don, même petit, finance une rentrée entière pour un enfant.</p>
+        <div class="facts">
+          <div class="fact"><b>1 200</b><span>enfants suivis <span class="ex">exemple</span></span></div>
+          <div class="fact"><b>85 %</b><span>des dons vont aux programmes <span class="ex">exemple</span></span></div>
+          <div class="fact"><b>12</b><span>écoles partenaires <span class="ex">exemple</span></span></div>
+        </div>
+      </div>
+
+      <div class="give" id="don">
+        <h2>Faire un don</h2>
+
+        <div class="seg" role="group" aria-label="Fréquence du don">
+          <button type="button" id="f-once" aria-pressed="true">Une fois</button>
+          <button type="button" id="f-month" aria-pressed="false">Chaque mois</button>
+        </div>
+
+        <div class="amounts" role="group" aria-label="Montant du don">
+          <button type="button" data-amt="10" aria-pressed="false">10 €</button>
+          <button type="button" data-amt="25" aria-pressed="true">25 €</button>
+          <button type="button" data-amt="50" aria-pressed="false">50 €</button>
+          <button type="button" data-amt="100" aria-pressed="false">100 €</button>
+          <button type="button" data-amt="250" aria-pressed="false">250 €</button>
+          <button type="button" data-amt="500" aria-pressed="false">500 €</button>
+        </div>
+        <div class="custom">
+          <label for="amt-custom">Autre montant</label>
+          <input id="amt-custom" type="number" inputmode="decimal" min="1" step="1" placeholder="0">
+          <span class="cur">€</span>
+        </div>
+        <p class="impact" id="impact" aria-live="polite"></p>
+
+        <div class="tabs" role="tablist" aria-label="Moyen de paiement">
+          <button type="button" role="tab" id="t-card" aria-selected="true" aria-controls="p-card">Carte</button>
+          <button type="button" role="tab" id="t-paypal" aria-selected="false" aria-controls="p-paypal">PayPal</button>
+          <button type="button" role="tab" id="t-bank" aria-selected="false" aria-controls="p-bank">Virement</button>
+        </div>
+
+        <div class="panel" id="p-card" role="tabpanel" aria-labelledby="t-card">
+          <a class="cta" id="go-card" href="#don" target="_blank" rel="noopener">Donner par carte</a>
+          <p class="small">Paiement sécurisé par notre prestataire. Nous ne voyons ni ne stockons votre numéro de carte.</p>
+          <p class="notice" id="warn-card" hidden>Lien de paiement à renseigner : voir <code>CONFIG</code> dans le code de la page.</p>
+        </div>
+        <div class="panel" id="p-paypal" role="tabpanel" aria-labelledby="t-paypal" hidden>
+          <a class="cta paypal" id="go-paypal" href="#don" target="_blank" rel="noopener">Donner avec PayPal</a>
+          <p class="small">Vous pouvez payer avec votre compte PayPal ou une carte bancaire.</p>
+          <p class="notice" id="warn-paypal" hidden>Lien PayPal à renseigner : voir <code>CONFIG</code> dans le code de la page.</p>
+        </div>
+        <div class="panel" id="p-bank" role="tabpanel" aria-labelledby="t-bank" hidden>
+          <dl class="bank" id="bank"></dl>
+          <p class="small">Indiquez votre e-mail dans le motif du virement pour recevoir votre reçu.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="block" id="impact-section">
+      <h2>Ce que votre don change</h2>
+      <p class="intro">Voici des exemples concrets de ce que chaque montant finance. Les équivalents en francs CFA sont calculés au taux fixe de 655,957 FCFA pour 1 €.</p>
+      <ul class="ladder" id="ladder"></ul>
+    </section>
+
+    <section class="block">
+      <div class="split">
+        <div>
+          <h2>Où va l’argent</h2>
+          <p class="intro">Nous publions chaque année la répartition de nos dépenses. Les chiffres ci-dessous sont des exemples à remplacer par vos comptes.</p>
+          <div class="bar" role="img" aria-label="Répartition : 85 % programmes, 10 % collecte, 5 % fonctionnement">
+            <span class="a" style="width:85%"></span><span class="b" style="width:10%"></span><span class="c" style="width:5%"></span>
+          </div>
+          <ul class="legend">
+            <li><i style="background:var(--primary)"></i><span>Programmes pour les enfants</span><b>85 %</b></li>
+            <li><i style="background:var(--sun)"></i><span>Collecte de fonds</span><b>10 %</b></li>
+            <li><i style="background:var(--muted)"></i><span>Fonctionnement</span><b>5 %</b></li>
+          </ul>
+        </div>
+        <div class="faq">
+          <h2 style="margin-bottom:16px">Questions fréquentes</h2>
+          <details>
+            <summary>Vais-je recevoir un reçu ?</summary>
+            <p>Oui. Un reçu est envoyé par e-mail après chaque don. Selon votre pays de résidence, il peut ouvrir droit à une réduction d’impôt.</p>
+          </details>
+          <details>
+            <summary>Puis-je arrêter un don mensuel ?</summary>
+            <p>À tout moment, en nous écrivant ou depuis le lien présent dans chaque e-mail de confirmation.</p>
+          </details>
+          <details>
+            <summary>Mon paiement est-il sécurisé ?</summary>
+            <p>Les paiements par carte et PayPal passent par les plateformes de ces prestataires. Cette page ne collecte aucune donnée bancaire.</p>
+          </details>
+          <details>
+            <summary>Comment donner depuis le Bénin ?</summary>
+            <p>Utilisez le virement avec les coordonnées de l’onglet « Virement », ou contactez-nous pour un don en espèces ou par Mobile Money.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© Horizon Solidaire · Association loi 1901 / enregistrée au Bénin <span class="ex">à compléter</span></span>
+    <span>contact@exemple.org <span class="ex">à remplacer</span></span>
+  </footer>
+</div>
+
+<script>
+/* ---- À PERSONNALISER ---------------------------------------------------- */
+var CONFIG = {
+  // Liens de paiement créés dans votre compte Stripe (Payment Links) ou équivalent.
+  // Laissez vide tant que le lien n'existe pas : la page affiche alors un rappel.
+  card:   { once: "", monthly: "" },
+  // Lien PayPal.Me (ex. "https://www.paypal.com/paypalme/votrenom") ou bouton de don PayPal.
+  // Le montant est ajouté automatiquement à la fin d'un lien paypal.me.
+  paypal: { once: "", monthly: "" },
+  // Coordonnées bancaires affichées dans l'onglet Virement.
+  bank: [
+    ["Bénéficiaire", "Horizon Solidaire"],
+    ["IBAN", "À RENSEIGNER"],
+    ["BIC / SWIFT", "À RENSEIGNER"],
+    ["Banque", "À RENSEIGNER"]
+  ]
+};
+var XOF_PER_EUR = 655.957;
+/* ------------------------------------------------------------------------ */
+
+var state = { amount: 25, monthly: false };
+var $ = function (id) { return document.getElementById(id); };
+var amtBtns = Array.prototype.slice.call(document.querySelectorAll(".amounts button"));
+
+function eur(n) { return n.toLocaleString("fr-FR", { maximumFractionDigits: 2 }) + " €"; }
+function fcfa(n) { return Math.round(n * XOF_PER_EUR / 100) * 100; }
+function fcfaText(n) { return fcfa(n).toLocaleString("fr-FR") + " FCFA"; }
+
+var IMPACTS = [
+  [10,  "un kit de fournitures scolaires pour un enfant"],
+  [25,  "un mois de cantine pour un enfant"],
+  [50,  "un uniforme et des chaussures pour un enfant"],
+  [100, "un trimestre de soutien scolaire pour un enfant"],
+  [250, "une rentrée complète pour une famille"],
+  [500, "l’équipement d’une salle de classe en livres"]
+];
+function impactFor(a) {
+  var pick = null;
+  for (var i = 0; i < IMPACTS.length; i++) if (a >= IMPACTS[i][0]) pick = IMPACTS[i];
+  return pick;
+}
+
+function render() {
+  var a = state.amount;
+  var valid = a > 0 && isFinite(a);
+  amtBtns.forEach(function (b) { b.setAttribute("aria-pressed", String(valid && Number(b.dataset.amt) === a && $("amt-custom").value === "")); });
+  $("f-once").setAttribute("aria-pressed", String(!state.monthly));
+  $("f-month").setAttribute("aria-pressed", String(state.monthly));
+
+  var imp = $("impact");
+  if (!valid) {
+    imp.textContent = "Saisissez un montant pour voir ce qu’il finance.";
+  } else {
+    var p = impactFor(a);
+    var base = "<b>" + eur(a) + "</b>" + (state.monthly ? " par mois" : "") + " ≈ " + fcfaText(a) + ".";
+    imp.innerHTML = base + (p ? " Cela finance " + p[1] + "." : " Merci, chaque euro compte.");
+  }
+
+  var label = valid ? eur(a) + (state.monthly ? " par mois" : "") : "";
+  var freq = state.monthly ? "monthly" : "once";
+
+  var cardUrl = CONFIG.card[freq];
+  var cardBtn = $("go-card");
+  cardBtn.textContent = valid ? "Donner " + label + " par carte" : "Donner par carte";
+  cardBtn.href = cardUrl || "#don";
+  $("warn-card").hidden = !!cardUrl;
+
+  var ppUrl = CONFIG.paypal[freq];
+  var ppBtn = $("go-paypal");
+  ppBtn.textContent = valid ? "Donner " + label + " avec PayPal" : "Donner avec PayPal";
+  if (ppUrl && /paypal\.me|paypalme/i.test(ppUrl) && valid) {
+    ppBtn.href = ppUrl.replace(/\/+$/, "") + "/" + a + "EUR";
+  } else {
+    ppBtn.href = ppUrl || "#don";
+  }
+  $("warn-paypal").hidden = !!ppUrl;
+}
+
+amtBtns.forEach(function (b) {
+  b.addEventListener("click", function () {
+    state.amount = Number(b.dataset.amt);
+    $("amt-custom").value = "";
+    render();
+  });
+});
+$("amt-custom").addEventListener("input", function (e) {
+  var v = parseFloat(e.target.value);
+  state.amount = v > 0 ? v : 0;
+  render();
+});
+$("f-once").addEventListener("click", function () { state.monthly = false; render(); });
+$("f-month").addEventListener("click", function () { state.monthly = true; render(); });
+
+/* tabs */
+var tabIds = ["card", "paypal", "bank"];
+function showTab(id) {
+  tabIds.forEach(function (t) {
+    $("t-" + t).setAttribute("aria-selected", String(t === id));
+    $("p-" + t).hidden = t !== id;
+  });
+}
+tabIds.forEach(function (t) {
+  $("t-" + t).addEventListener("click", function () { showTab(t); });
+});
+
+/* bank details with copy buttons */
+function copyText(text, btn) {
+  function ok() {
+    var old = btn.textContent; btn.textContent = "Copié"; btn.classList.add("done");
+    setTimeout(function () { btn.textContent = old; btn.classList.remove("done"); }, 1600);
+  }
+  function fallback() {
+    try {
+      var r = document.createRange();
+      r.selectNodeContents(btn.parentNode.querySelector("dd"));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    } catch (e) {}
+  }
+  try {
+    navigator.clipboard.writeText(text).then(ok, fallback);
+  } catch (e) { fallback(); }
+}
+var bank = $("bank");
+CONFIG.bank.forEach(function (row) {
+  var wrap = document.createElement("div");
+  var dt = document.createElement("dt"); dt.textContent = row[0];
+  var dd = document.createElement("dd"); dd.textContent = row[1];
+  var btn = document.createElement("button"); btn.type = "button"; btn.textContent = "Copier";
+  btn.setAttribute("aria-label", "Copier " + row[0]);
+  btn.addEventListener("click", function () { copyText(row[1], btn); });
+  wrap.appendChild(dt); wrap.appendChild(dd); wrap.appendChild(btn);
+  bank.appendChild(wrap);
+});
+
+/* impact ladder */
+var ladder = $("ladder");
+IMPACTS.slice(0, 4).forEach(function (it) {
+  var li = document.createElement("li");
+  li.innerHTML = '<span class="amt">' + eur(it[0]) + '</span><span class="fcfa">≈ ' + fcfaText(it[0]) + '</span><p>' + it[1].charAt(0).toUpperCase() + it[1].slice(1) + '.</p>';
+  ladder.appendChild(li);
+});
+
+render();
+</script>
+</body>
+</html>
